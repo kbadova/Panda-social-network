@@ -87,8 +87,10 @@ class panda_social_network:
 
     def how_many_gender_in_network(self, level, panda, gender):
         self.bfs(panda)
-        key = list(self.level.keys())[list(self.level.values()).index(level)]
-        return key
+        key = []
+        key.append(list(self.level.keys())[list(self.level.values()).index(level)])
+        i = sum([1 for panda in key if panda.gender == gender])
+        return i
 
     def save(file_name):
         pass

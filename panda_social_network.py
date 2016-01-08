@@ -1,4 +1,4 @@
-from collection import deque
+from collections import deque
 
 
 class panda_social_network:
@@ -14,7 +14,7 @@ class panda_social_network:
     def has_panda(self, panda):
         return panda in self.graph
 
-    def are_frinds(self, panda1, panda2):
+    def are_friends(self, panda1, panda2):
         if panda1 in self.graph[panda2] or panda2 in self.graph[panda1]:
             return True
         return False
@@ -26,8 +26,8 @@ class panda_social_network:
             self.add_panda(panda2)
         if self.are_friends(panda1, panda2):
             raise Exception("PandasAlreadyFriends")
-        self.graph[hash(panda1)].append(panda2)
-        self.graph[hash(panda2)].append(panda1)
+        self.graph[panda1].append(panda2)
+        self.graph[panda2].append(panda1)
 
     def friends_of(self, panda):
         if not self.has_panda(panda):
@@ -35,7 +35,8 @@ class panda_social_network:
         return self.graph[panda]
 
     def connection_level(self, panda1, panda2):
-        return 1 if self.are_friends(panda1, panda2) else self.bfs(panda1,panda2)
+        print(self.graph)
+        return self.bfs(panda1, panda2)
 
     """
     Breadth-First-Search
@@ -58,3 +59,9 @@ class panda_social_network:
             visited = next_graph
             i += 1
         return level[panda2]
+
+    def save(file_name):
+        pass
+
+    def load(file_name):
+        pass

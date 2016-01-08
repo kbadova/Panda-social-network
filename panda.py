@@ -17,11 +17,11 @@ class Panda(object):
         return "{} {} {}".format(self.name, self.mail, self.gender)
 
     def __eq__(self, other):
-        if self.Panda == other:
+        if self.__hash__() == other:
             return True
 
     def __hash__(self):
-        hash(self.__str__())
+        return hash(self.__str__())
 
     def __verify_mail(self):
         find = re.compile('([\w_.\-]+[@]+[\w{2,10}]+[.]+[a-zA-Z]{2,5})')

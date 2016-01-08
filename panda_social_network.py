@@ -1,7 +1,8 @@
-from collection import deque
+from collections import deque
+import json
 
 
-class panda_social_network:
+class Panda_social_network:
 
     def __init__(self):
         self.graph = {}
@@ -14,8 +15,8 @@ class panda_social_network:
     def has_panda(self, panda):
         return panda in self.graph
 
-    def are_frinds(self, panda1, panda2):
-        if panda1 in self.graph[panda2] or panda2 in self.graph[panda1]:
+    def are_friends(self, panda1, panda2):
+        if panda1 in self.graph[panda2] and panda2 in self.graph[panda1]:
             return True
         return False
 
@@ -26,35 +27,57 @@ class panda_social_network:
             self.add_panda(panda2)
         if self.are_friends(panda1, panda2):
             raise Exception("PandasAlreadyFriends")
-        self.graph[hash(panda1)].append(panda2)
-        self.graph[hash(panda2)].append(panda1)
+        self.graph[panda1].append(panda2)
+        self.graph[panda2].append(panda1)
 
     def friends_of(self, panda):
         if not self.has_panda(panda):
             return False
         return self.graph[panda]
 
-    def connection_level(self, panda1, panda2):
-        return 1 if self.are_friends(panda1, panda2) else self.bfs(panda1,panda2)
+    def connection_level(self, start_node, end_node):
+        visited = set()
+        queue = deque()
 
-    """
-    Breadth-First-Search
-    S -all you can reach in 0 moves
-    """
-    def bfs(self, panda1, panda2):
-        level = {panda1: 0}  # level 0
-        parent = {panda1: None}
-        i = 1  #start from level 1
-        visited = [panda1]  # level i -1
+        visited.add(start_node)
+        queue.append((0, start_node))
 
-        while visited:
-            next_graph = deque()  #level i
-            for node in visited:
-                for v in self.graph[node]:
-                    if v not in level:
-                        level[v] = i
-                        parent[v] = node
-                        next_graph.append(v)
-            visited = next_graph
-            i += 1
-        return level[panda2]
+        while len(queue) != 0:
+            node_with_level = queue.popleft()
+            node = node_with_level[1]
+            level = node_with_level[0]
+
+            if node == end_node:
+                return level
+
+            for neighbour in self.graph[node]:
+                if neighbour not in visited:
+                    visited.add(neighbour)
+                    queue.append((level + 1, neighbour))
+        return -1
+
+    def are_connected(self, panda1, panda2):
+        if self.connection_level(panda1, panda2) == -1:
+            return False
+        elif self.connection_level(panda1, panda2) == 0:
+            return "Panda not a friend with itself"
+        return True
+
+    def how_many_gender_in_network(self, level, panda, gender):
+        counter = 0
+        for elem in self.graph:
+            if self.connection_level(panda, elem) == level:
+                if elem.gender == gender:
+                    counter += 1
+        return counter
+
+    def save(self, file_name):
+        with open(file_name, "w") as filee:
+            json.dump(str(self.graph), filee)
+
+    def load(self, file_name):
+        with open(file_name, "r") as filee:
+            self.graph = json.load(filee)
+
+
+

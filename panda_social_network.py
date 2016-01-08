@@ -68,11 +68,11 @@ class panda_social_network:
         while visited:
             next_graph = deque()  # level i
             for node in visited:
-                for v in self.graph[node]:
-                    if v not in self.level:
-                        self.level[v] = i
-                        parent[v] = node
-                        next_graph.append(v)
+                for neighbour in self.graph[node]:
+                    if neighbour not in self.level:
+                        self.level[neighbour] = i
+                        parent[neighbour] = node
+                        next_graph.append(neighbour)
             visited = next_graph
             i += 1
         try:

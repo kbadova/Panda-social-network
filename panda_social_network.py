@@ -1,21 +1,7 @@
 from collections import deque
-import sqlite3
 import os
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, 'panda_network.db')
-DB = sqlite3.connect(DB_PATH)
-c = DB.cursor()
-# c.execute('''CREATE TABLE IF NOT EXISTS users
-#     (ID INTEGER PRIMARY KEY     AUTOINCREMENT,
-#     name            CHAR(70)     NOT NULL,
-#     mail CHAR(20) NOT NULL),
-#     gender char(20) NOT NULL;''')
+import json
 
-# c.execute(
-#     '''
-#         CREATE TABLE IF NOT EXISTS 
-
-#     ''')
 
 class panda_social_network:
 
@@ -23,10 +9,14 @@ class panda_social_network:
         self.graph = {}
         self.level = {}
 
+    def __iter__(self):
+        return self.graph
+
     def add_panda(self, panda):
         if panda in self.graph:
             raise Exception("PandaAlreadyThere")
         self.graph[panda] = []
+        return True
 
     def has_panda(self, panda):
         return panda in self.graph
@@ -52,7 +42,6 @@ class panda_social_network:
         return self.graph[panda]
 
     def connection_level(self, panda1, panda2):
-        print(self.level)
         return self.bfs(panda1, panda2)
 
     """
@@ -86,14 +75,16 @@ class panda_social_network:
         return False
 
     def how_many_gender_in_network(self, level, panda, gender):
-        self.bfs(panda)
-        key = []
-        key.append(list(self.level.keys())[list(self.level.values()).index(level)])
-        i = sum([1 for panda in key if panda.gender == gender])
+        i = 0
+        for elem in self.graph:
+            if self.bfs(elem, panda) == level and elem.gender == gender:
+                i += 1
         return i
 
-    def save(file_name):
-        pass
+    def save(self, file_name):
+        with open(file_name, 'w') as fp:
+            json.dump(str(self.graph), fp, sort_keys=True, indent=4)
 
-    def load(file_name):
-        pass
+    def load(self, file_name):
+        with open(file_name, 'r') as fp:
+            self.graph = json.load(fp)

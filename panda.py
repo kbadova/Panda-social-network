@@ -9,7 +9,7 @@ class Panda(object):
         self.mail = mail
         self.gender = gender
         self.__verify_mail()
-
+        
     def __str__(self):
         return "{} {} {}".format(self.name, self.mail, self.gender)
 
@@ -26,11 +26,10 @@ class Panda(object):
     def __verify_mail(self):
         find = re.compile('([\w_.\-]+[@]+[\w{2,10}]+[.]+[a-zA-Z]{2,5})')
         if len(find.findall(self.mail)) == 0:
-            raise Exception("You have provided invalid mail adress...")
+            raise Exception("You have provided invalid email adress...")
 
     def isMale(self):
         return True if self.gender == 'Male' else False
 
     def isFemale(self):
         return True if self.gender == 'Female' else False
-

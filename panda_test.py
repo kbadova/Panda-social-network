@@ -48,7 +48,6 @@ class Testpanda_social_network(unittest.TestCase):
 
     def test_social_network_make_friends(self):
         self.network.make_friends(self.ivo, self.rado)
-        
 
     def test_social_network_has_panda_are_friends(self):
         self.network.add_panda(self.ivo)

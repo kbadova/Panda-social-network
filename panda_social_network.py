@@ -1,11 +1,24 @@
 from collections import deque
-import json
+import json, ast
 
 
 class Panda_social_network:
 
     def __init__(self):
         self.graph = {}
+
+    # def __str__(self):
+    #     string = ""
+    #     for key in self.graph:
+    #         string_key_names = ""
+    #         for el in self.graph[key]:
+    #             if el.name not in string_key_names:
+    #                 string_key_names += el.name + ", "
+    #         string += "'{}' : [{}]".format(key.name, string_key_names)
+    #     return "{\n" + string.replace(", ]", "],\n") + "}"
+
+    # def __repr__(self):
+    #     return self.graph.__str__()
 
     def add_panda(self, panda):
         if panda in self.graph:
@@ -73,11 +86,15 @@ class Panda_social_network:
 
     def save(self, file_name):
         with open(file_name, "w") as filee:
-            json.dump(str(self.graph), filee)
+            json.dump(self.graph.__repr__(), filee)
 
     def load(self, file_name):
-        with open(file_name, "r") as filee:
-            self.graph = json.load(filee)
-
-
+        with open(file_name) as filee:
+            # print(type(filee))
+            for line in filee:
+                datatext = json.loads(line)
+                # self.graph = datatext)
+        new_Data = eval(datatext)
+        print(type(new_Data))
+        return new_Data
 

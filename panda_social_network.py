@@ -1,8 +1,4 @@
 from collections import deque
-<<<<<<< HEAD
-import os
-=======
->>>>>>> master
 import json
 
 

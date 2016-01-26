@@ -1,24 +1,18 @@
 from collections import deque
-import json, ast
+import json
+from panda import Panda
 
 
-class Panda_social_network:
+class PandaSocialNetwork:
 
     def __init__(self):
         self.graph = {}
 
-    # def __str__(self):
-    #     string = ""
-    #     for key in self.graph:
-    #         string_key_names = ""
-    #         for el in self.graph[key]:
-    #             if el.name not in string_key_names:
-    #                 string_key_names += el.name + ", "
-    #         string += "'{}' : [{}]".format(key.name, string_key_names)
-    #     return "{\n" + string.replace(", ]", "],\n") + "}"
+    def __str__(self):
+        return str(self.graph)
 
-    # def __repr__(self):
-    #     return self.graph.__str__()
+    def __repr__(self):
+        return str(self.graph)
 
     def add_panda(self, panda):
         if panda in self.graph:
@@ -80,21 +74,26 @@ class Panda_social_network:
         counter = 0
         for elem in self.graph:
             if self.connection_level(panda, elem) == level:
-                if elem.gender == gender:
+                if elem.gender() == gender:
                     counter += 1
         return counter
 
-    def save(self, file_name):
-        with open(file_name, "w") as filee:
-            json.dump(self.graph.__repr__(), filee)
+    def dict_of_friends(self, panda):
+        dict_of_friends = []
+        for friend in self.friends_of(panda):
+            dict_of_friends.append(friend.panda_dict())
+        return dict_of_friends
 
-    def load(self, file_name):
-        with open(file_name) as filee:
-            # print(type(filee))
-            for line in filee:
-                datatext = json.loads(line)
-                # self.graph = datatext)
-        new_Data = eval(datatext)
-        print(type(new_Data))
-        return new_Data
+    def load(self, filename):
+        with open(filename, 'r') as f:
+            data = json.load(f)
+        return data
 
+    def save(self, filename):
+        data = self.load(filename)
+        dict_graph = {}
+        for panda in self.graph:
+            dict_graph[panda.panda_dict()] = self.dict_of_friends(panda)
+        data.update(dict_graph)
+        with open(filename, 'w') as f:
+            json.dump(data, f, indent=4, sort_keys=True)

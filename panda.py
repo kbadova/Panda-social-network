@@ -1,36 +1,44 @@
 import re
 
 
-class Panda(object):
-    """docstring for Panda"""
+class Panda:
     def __init__(self, name, mail, gender):
-        super(Panda, self).__init__()
-        self.name = name
-        self.mail = mail
-        self.gender = gender
+        self.__name = name
+        self.__mail = mail
+        self.__gender = gender
         self.__verify_mail()
 
+    def name(self):
+        return self.__name
+
+    def email(self):
+        return self.__mail
+
+    def gender(self):
+        return self.__gender
+
     def __str__(self):
-        return "{} {} {}".format(self.name, self.mail, self.gender)
+        return "{}, {}, {}".format(self.__name, self.__mail, self.__gender)
 
     def __repr__(self):
-        return "{} {} {}".format(self.name, self.mail, self.gender)
+        return self.__str__()
 
     def __eq__(self, other):
-        if self.__hash__() == other:
-            return True
+        return str(self) == str(other)
 
     def __hash__(self):
         return hash(self.__str__())
 
     def __verify_mail(self):
         find = re.compile('([\w_.\-]+[@]+[\w{2,10}]+[.]+[a-zA-Z]{2,5})')
-        if len(find.findall(self.mail)) == 0:
+        if len(find.findall(self.email())) == 0:
             raise Exception("You have provided invalid mail adress...")
 
     def isMale(self):
-        return True if self.gender == 'Male' else False
+        return self.__gender == 'male'
 
     def isFemale(self):
-        return True if self.gender == 'Female' else False
+        return self.__gender == 'female'
 
+    def panda_dict(self):
+        return str(self.__dict__)
